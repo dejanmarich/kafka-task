@@ -1,0 +1,15 @@
+- hosts: "{{ confluentTarget }}" #confluent
+  become: True
+  become_method: sudo
+  gather_facts: True
+
+  vars_prompt:
+    - name: "confluentTarget"
+      prompt: "Please enter kafka target hosts"
+      private: no
+    - name: "appEnv"
+      prompt: "Please enter application target environment"
+      private: no
+
+  roles:
+    - confluent_kafka

@@ -1,0 +1,7 @@
+[local]
+localhost ansible_connection=local
+
+# ANSIBLE-CONTROLLER
+[ansible-controller]
+ansible-1 ansible_host=
+

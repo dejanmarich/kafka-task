@@ -1,0 +1,47 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+  {%- if value is defined -%}
+    {{ label }}={{ value }}
+  {%- endif %}
+{%- endmacro -%}
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# the directory where the snapshot is stored.
+{{ insert_field_if_exists('Description', item.static.Description) }}
+{{ insert_field_if_exists('dataDir', item.static.data_dir) }}
+
+# the port at which the clients will connect
+{{ insert_field_if_exists('clientPort', item.static.client_port) }}
+
+# disable the per-ip limit on the number of connections since this is a non-production config
+{{ insert_field_if_exists('maxClientCnxns', item.static.maxClientCnxns) }}
+{{ insert_field_if_exists('minSessionTimeout', item.static.minSessionTimeout) }}
+{{ insert_field_if_exists('maxSessionTimeout', item.static.maxSessionTimeout) }}
+{{ insert_field_if_exists('autopurge.purgeInterval', item.static.autopurge.purgeInterval) }}
+{{ insert_field_if_exists('autopurge.snapRetainCount', item.static.autopurge.snapRetainCount) }}
+{{ insert_field_if_exists('tickTime', item.static.tickTime) }}
+{{ insert_field_if_exists('initLimit', item.static.initLimit) }}
+{{ insert_field_if_exists('syncLimit', item.static.syncLimit) }}
+
+# zookeeper ports: 2888-internal_communication_port-leader_port, 3888-election_port
+{{ insert_field_if_exists('server.1', item[appEnv].server1) }}:{{ item.static.leader_port }}:{{ item.static.election_port }}
+{{ insert_field_if_exists('server.2', item[appEnv].server2) }}:{{ item.static.leader_port }}:{{ item.static.election_port }}
+{{ insert_field_if_exists('server.3', item[appEnv].server3) }}:{{ item.static.leader_port }}:{{ item.static.election_port }}
+
+4lw.commands.whitelist=*
+
+{## leader server also servers configuration#}
+{#{{ insert_field_if_exists('leaderServes', item['leaderServes']) }}#}

@@ -1,0 +1,86 @@
+---
+
+- name: get_kafka_hostname
+  shell: hostname --all-fqdns
+  register: kafka_host
+
+
+- name: print_kafka_host
+  debug:
+    msg: Kafka hostname = "{{ kafka_host}}"
+
+
+- name: create_kafka_user
+  user:
+    name: "{{ kafka.conf[appEnv].user }}"
+    group: "{{ kafka.conf[appEnv].group }}"
+    system: true
+    state: present
+  register: check_user
+
+
+- name: add_kafka_user_to_confluent_group
+  user:
+    name: "{{ kafka.conf[appEnv].user }}"
+    group: "{{ kafka.conf[appEnv].group }}"
+
+- name: create_data_dir
+  file:
+    path: "{{ item.static.data_dir }}"
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    mode: 0755
+    state: directory
+    force: yes
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: change_data_dir_ownership
+  file:
+    path: "{{ item.static.data_dir }}"
+    owner: "{{ item[appEnv].user}}"
+    group: "{{ item[appEnv].group }}"
+    recurse: yes
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: create_conf_dir_if_not_created
+  file:
+    path: "{{ common.confluent.conf_dest }}"
+    state: directory
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: change_conf_dir_ownership
+  file:
+    path: "{{ common.confluent.conf_dest }}"
+    owner: "{{ item[appEnv].user}}"
+    group: "{{ item[appEnv].group }}"
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: create_log_dir
+  file:
+    path: "{{ item[appEnv].log_dir }}"
+    state: directory
+    force: yes
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: change_log_dir_ownership
+  file:
+    path: "{{ item[appEnv].log_dir }}"
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    recurse: yes
+  with_items:
+    - "{{ kafka.conf }}"

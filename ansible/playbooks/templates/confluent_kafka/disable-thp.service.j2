@@ -1,0 +1,16 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+  {%- if value is defined -%}
+    {{ label }}={{ value }}
+  {%- endif %}
+{%- endmacro -%}
+
+[Unit]
+{{ insert_field_if_exists('Description', item.static.Description) }}
+
+[Service]
+{{ insert_field_if_exists('Type', item.static.Type) }}
+{{ insert_field_if_exists('ExecStart', item.static.ExecStart) }}
+
+[Install]
+{{ insert_field_if_exists('WantedBy', item.static.WantedBy) }}

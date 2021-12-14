@@ -1,0 +1,34 @@
+# CONFLUENT PACKAGES AND SYSTEM
+confluent:
+  #STATIC PART
+  comment: 'Confluent'
+  data_basepath: '/var/data'
+  initscripts_path: '/usr/sbin'
+  conf_dest: '/etc/config'
+  local:
+    files: '../files'
+  confluent_local_file: 'confluent-community-6.2.1.tar'
+  #DYNAMIC PART
+  #ENV
+  test:
+    log_basepath: '/var/log'
+  dev:
+    log_basepath: '/var/log'
+  prod:
+    log_basepath: '/var/log'
+
+  # system configuration
+  sysconfig:
+    vmswappiness_value: '1'
+    firewalld:
+      state: 'stopped'
+      startup: 'no'
+    selinux:
+      state: 'disabled'
+
+  # environment
+  environment:
+    script_name: 'confluent.sh'
+    script_path: '/etc/profile.d'
+    CONFLUENT_HOME: '/opt/confluent-6.2.1'
+    PATH: '$PATH:$CONFLUENT_HOME/bin:$PATH'

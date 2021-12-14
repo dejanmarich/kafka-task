@@ -1,0 +1,5 @@
+---
+
+- name: set_fact_git_tag_timestamp
+  set_fact:
+    tag_timestamp: "{{ ansible_date_time.iso8601_basic_short}}"

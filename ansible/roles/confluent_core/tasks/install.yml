@@ -1,0 +1,122 @@
+---
+
+- name: check_for_unarchived_package
+  stat:
+    path: "{{ dst_path }}/confluent-{{ version }}"
+  register: unarchived_confluent_package
+
+- block: # Try to download the Confluent package on the host directly from the internet
+    - name: download_confluent
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ dst_path }}"
+        force: yes
+
+
+#  rescue: # If it fails (e.g. due to network limitations or firewall), download it locally and then copy
+#    - name: download_locally
+#      get_url:
+#        url: "{{ url }}"
+#        dest: "{{ item.local_path }}"
+#        force: yes
+#      with_items:
+#        - "{{ common.confluent }}"
+#      connection: local
+#      become: no
+#      run_once: yes
+#
+#  always:
+#    - name: copy_local_packages_to_hosts
+#      copy:
+#        src: "{{ role_path }}/files/{{ distribution }}-{{ version }}.tar"
+#        dest: "{{ dst_path }}/{{ distribution }}-{{ version }}.tar"
+#
+#    - name: unarchive_package
+#      unarchive:
+#        src: "{{ dst_path }}/{{ distribution }}-{{ version }}.tar"
+#        dest: "{{ dst_path }}"
+#        remote_src: yes
+#
+#    - name: remove_archived_package
+#      file:
+#        path: "{{ dst_path }}/{{ distribution }}-{{ version }}-{{ scala_version }}.tar"
+#        state: absent
+#
+#  when: not unarchived_confluent_package.stat.exists
+
+#- name: copy_local_packages_to_hosts
+#  copy:
+#    src: "{{ role_path }}/files/{{ distribution }}-{{ version }}.tar"
+#    dest: "{{ dst_path }}/{{ distribution }}-{{ version }}.tar"
+#  when: not unarchived_confluent_package.stat.exists
+#
+#
+- name: unarchive_package
+  unarchive:
+    src: "{{ dst_path }}/{{ distribution }}-{{ version }}.tar.gz"
+    dest: "{{ dst_path }}"
+    remote_src: yes
+  when: not unarchived_confluent_package.stat.exists
+
+
+- name: remove_archived_package
+  file:
+    path: "{{ dst_path }}/{{ distribution }}-{{ version }}.tar.gz"
+    state: absent
+
+
+- name: change_group_ownership_on_confluent_dir
+  file:
+    path: "{{ dst_path }}/confluent-{{ version }}/"
+    mode: 0775
+    owner: "{{ common.confluent[appEnv].user }}"
+    group: "{{ common.confluent[appEnv].group }}"
+    recurse: yes
+
+
+- name: set_group_permissions_on_confluent_dir
+  shell: chmod g+w -R {{ dst_path }}/confluent-{{ version }}
+
+
+- name: create_config_directory
+  file:
+    path: "{{ common.confluent.conf_dest }}"
+    state: directory
+    force: yes
+
+
+- name: change_dir_ownership
+  file:
+    path: "{{ item.conf_dest }}"
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    force: yes
+  with_items:
+    - "{{ common.confluent }}"
+
+
+- name: render_confluent_environment_script
+  template:
+    src: "templates/confluent_core/confluent.sh.j2"
+    dest: "{{ item.script_path }}/{{ item.script_name }}"
+    owner: root
+    group: root
+    mode: 0750
+    backup: yes
+  with_items:
+    - "{{ confluent.environment }}"
+  register: confluent_script_status
+
+
+- name: source_confluent_environment_script
+  shell: source "{{ item.script_path }}/{{ item.script_name }}"
+  with_items:
+    - "{{ confluent.environment }}"
+  args:
+    executable: /bin/bash
+
+
+- name: check_confluent_home
+  shell: echo $CONFLUENT_HOME
+  args:
+    executable: /bin/bash

@@ -1,0 +1,89 @@
+---
+
+- name: check_create_group
+  group:
+    name: "{{ item[appEnv].group }}"
+    gid: "{{ item[appEnv].gid }}"
+    state: present
+  with_items:
+    - "{{ common.confluent }}"
+  register: check_group
+
+
+- name: check_create_user
+  user:
+    name: "{{ item[appEnv].user }}"
+    uid: "{{ item[appEnv].uid }}"
+    state: present
+  with_items:
+    - "{{ common.confluent }}"
+  when: check_group is succeeded
+  register: check_user
+
+
+- name: create_user
+  user:
+    name: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    uid: "{{ item[appEnv].uid }}"
+    state: present
+  with_items:
+    - "{{ common.confluent }}"
+  when: check_group is succeeded
+  register: check_user
+
+
+- name: check_if_sudoers_file_exists
+  stat:
+    path: /etc/sudoers
+  register: sudoers_status
+
+
+#- name: add_to_sudoers
+#  copy:
+#    content: "%{{ common.confluent[appEnv].group }} ALL=(ALL:ALL) NOPASSWD:ALL"
+#    dest: /etc/sudoers.d/confluent_nopasswd
+#    mode: 0440
+
+
+- name: include_to_sudoers
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    insertafter: "^%wheel" # or defaults to EOF
+    line: "{{ common.confluent[appEnv].group }} ALL=(ALL) NOPASSWD: ALL"
+  when: sudoers_status.stat.exists
+
+
+- name: kernel_disable_transparent_hugepage_enabled
+  shell: echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
+
+- name: kernel_disable_transparent_hugepage_defrag
+  shell: echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+
+#- name: disable_selinux
+#  selinux:
+#    state: "{{ item.state }}"
+#  with_items:
+#    - "{{ confluent.sysconfig.selinux }}"
+#  when: ansible_os_family == "RedHat"
+
+
+- name: disable_firewalld
+  systemd:
+    name: ufw
+    enabled: "{{ item.startup}}"
+    state: "{{ item.state }}"
+  with_items:
+    - "{{ confluent.sysconfig.firewalld }}"
+
+- name: disable_swap[1/2]
+  shell: swapoff -a
+
+- name: disable_swap[2/2]
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'

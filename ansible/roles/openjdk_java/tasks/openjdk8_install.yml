@@ -1,0 +1,106 @@
+---
+
+- name: yum_list_installed_packages
+  yum:
+    list=installed
+  no_log: True
+  register: yum_packages
+
+
+- name: check_openjdk_java_pkg_status
+  debug:
+    var: item
+  with_items: "{{ yum_packages|json_query(jsonquery) }}"
+  vars:
+    jsonquery: "results[?name=='{{ common.java.openjdk.general.yum_package_name }}'].yumstate"
+  register: openjdk_java_pkg_status
+
+
+- debug:
+    var: openjdk_java_pkg_status
+
+
+- name: check_openjdk_java_version
+  debug:
+    var: item
+  with_items: "{{ yum_packages|json_query(jsonquery) }}"
+  vars:
+    jsonquery: "results[?name=='{{ common.java.openjdk.general.yum_package_name }}'].version"
+  register: openjdk_java_version
+
+
+- debug:
+    var: openjdk_java_version
+
+
+- name: copy_openjdk_java_rpm
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ common.java.openjdk.packages }}"
+  when:  openjdk_java_pkg_status is skipped
+
+
+- name: initial_install_of_openjdk_java
+  yum:
+    name: "/tmp/{{ item }}"
+    state: present
+  with_items: "{{ common.java.openjdk.packages }}"
+  when:  openjdk_java_pkg_status is skipped
+  register: initial_install_openjdk_java_status
+
+
+- name: install_correct_version_of_openjdk_java
+  yum:
+    name: "{{ common.java.openjdk.packages }}"
+    state: present
+  when:  initial_install_openjdk_java_status is skipped and openjdk_java_version.results[0].item != "1.8.0.242"
+  register: install_correct_openjdk_java_status
+
+
+- debug:
+    var: install_correct_openjdk_java_status
+
+
+- name: java_alternatives_config
+  alternatives:
+    name: java
+    link: /usr/bin/java
+    path: "{{ common.java.openjdk.general.java_path }}"
+  when: initial_install_openjdk_java_status is succeeded or install_correct_openjdk_java_status is succeeded
+  register: alternatives_link_created_status
+
+
+- name: render_java_environment_script
+  template:
+    #src: "/opt/ansible/{{ clientName }}/inventories/bigdata/templates/openjdk_java/jdk8.sh.j2"
+    src: "/opt/ansible/bigdata/inventories/bigdata/templates/openjdk_java/jdk8.sh.j2"
+    dest: "{{ item.script_path }}/{{ item.script_name }}"
+    owner: root
+    group: root
+    mode: 0750
+    backup: yes
+  with_items:
+      - "{{ common.java.openjdk.environment }}"
+  #  when: alternatives_link_created_status is changed
+  register: jdk8_script_status
+
+
+- name: source_java_environment_script
+  shell: source "{{item.script_path}}/{{ item.script_name }}"
+  with_items:
+      - "{{ common.java.openjdk.environment }}"
+  #  when: jdk8_script_status is changed
+  register: source_java_env_script
+
+
+- name: check_java_home
+  shell: 'echo $JAVA_HOME'
+#  when: source_java_env_script is changed
+
+
+- name: check_cmd_java_version
+  shell: java -version

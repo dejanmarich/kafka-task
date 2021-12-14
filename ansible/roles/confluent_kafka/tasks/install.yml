@@ -1,0 +1,89 @@
+---
+
+- name: "set_fact: broker_id"
+  set_fact:
+    broker_id: "{{ ansible_hostname.split('.')[0] }}"
+
+
+- name: render_kafka_config
+  template:
+    src: "templates/confluent_kafka/server.properties.j2"
+    dest: "{{ common.confluent.conf_dest }}/server.properties"
+    owner: root
+    group: root
+    mode: 0750
+    backup: yes
+  with_items:
+    - "{{ kafka.server_properties }}"
+  register: kafka_config_status
+
+
+- name: chownership_on_server_properties_file
+  file:
+    path: "{{ common.confluent.conf_dest }}/server.properties"
+    owner: "{{ item[appEnv].user}}"
+    group: "{{ item[appEnv].group }}"
+    force: yes
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: render_kafka_systemd_env_conf
+  template:
+    src: "templates/confluent_kafka/kafka.environment.j2"
+    dest: "{{ common.confluent.conf_dest }}/{{ kafka.service.static.service_name }}.environment"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_items:
+    - "{{ kafka.environment }}"
+  register: systemd_env_conf
+
+
+- name: chownership_on_environment_file
+  file:
+    path: "{{ common.confluent.conf_dest }}/kafka.environment"
+    owner: "{{ item[appEnv].user}}"
+    group: "{{ item[appEnv].group }}"
+    force: yes
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: render_kafka_systemd_service_conf
+  template:
+    src: "templates/confluent_kafka/kafka.service.j2"
+    dest: "/lib/systemd/system/{{ item.static.service_name }}.service"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_items:
+    - "{{ kafka.service }}"
+  register: systemd_service_conf
+
+
+- name: render_kafka_log4j_file
+  template:
+    src: "templates/confluent_kafka/server_log4j.properties.j2"
+    dest: "{{ common.confluent.conf_dest}}/server_log4j.properties"
+    mode: 0640
+    owner: "{{ kafka.conf[appEnv].user }}"
+    group: "{{ kafka.conf[appEnv].group }}"
+
+
+- name: enable_kafka_service_and_daemon_reload
+  systemd:
+    name: "{{ item.static.service_name }}.service"
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - "{{ kafka.service }}"
+
+
+- name: start_kafka_service
+  systemd:
+    name: "{{ kafka.service.static.service_name }}"
+    enabled: true
+    state: started

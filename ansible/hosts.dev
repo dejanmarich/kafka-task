@@ -1,0 +1,71 @@
+[local]
+localhost ansible_connection=local
+
+## ELASTICSEARCH
+#[elasticsearch:children]
+#kibana
+#logstash
+#esmaster
+#esdata
+#esclient
+#[esmaster]
+#es-master-1 ansible_host=10.100.146.9
+#es-master-2 ansible_host=10.100.146.10
+#es-master-3 ansible_host=10.100.146.11
+#[esdata]
+#es-data-1 ansible_host=10.100.146.9
+#es-data-2 ansible_host=10.100.146.10
+#es-data-3 ansible_host=10.100.146.11
+#[esclient]
+#es-client-1 ansible_host=10.100.146.9
+#es-client-2 ansible_host=10.100.146.10
+#[kibana]
+#kibana-1 ansible_host=10.100.146.9
+#[logstash]
+#logstash-1 ansible_host=10.100.146.9
+
+
+# CASSANDRA
+#[cassandra]
+#cassandra-1 ansible_host=10.100.146.6
+#cassandra-2 ansible_host=10.100.146.7
+#cassandra-3 ansible_host=10.100.146.8
+
+
+# CONFLUENT
+[confluent_core]
+confluent-1 ansible_host=sc11napddmbpd31.sede.corp.sanpaoloimi.com
+confluent-2 ansible_host=sc11napddmbpd32.sede.corp.sanpaoloimi.com
+confluent-3 ansible_host=sc11napddmbpd33.sede.corp.sanpaoloimi.com
+confluent-4 ansible_host=sc11napddmbpd54.sede.corp.sanpaoloimi.com
+confluent-5 ansible_host=sc11napddmbpd55.sede.corp.sanpaoloimi.com
+
+# CONFLUENT-ZOOKEEPER
+[confluent_zookeeper]
+zookeeper-1 ansible_host=sc11napddmbpd31.sede.corp.sanpaoloimi.com
+zookeeper-2 ansible_host=sc11napddmbpd32.sede.corp.sanpaoloimi.com
+zookeeper-3 ansible_host=sc11napddmbpd33.sede.corp.sanpaoloimi.com
+
+# CONFLUENT-KAFKA
+[confluent_kafka]
+kafkabroker-1 ansible_host=sc11napddmbpd31.sede.corp.sanpaoloimi.com
+kafkabroker-2 ansible_host=sc11napddmbpd32.sede.corp.sanpaoloimi.com
+kafkabroker-3 ansible_host=sc11napddmbpd33.sede.corp.sanpaoloimi.com
+
+# CONFLUENT-SCHEMAREGISTRY
+[confluent_schemaregistry]
+schemaregistry-1 ansible_host=sc11napddmbpd31.sede.corp.sanpaoloimi.com
+schemaregistry-2 ansible_host=sc11napddmbpd32.sede.corp.sanpaoloimi.com
+schemaregistry-3 ansible_host=sc11napddmbpd33.sede.corp.sanpaoloimi.com
+
+# CONFLUENT-MIRRORMAKER
+[confluent_mirrormaker]
+mirrormaker-1 ansible_host=sc11napddmbpd54.sede.corp.sanpaoloimi.com
+mirrormaker-2 ansible_host=sc11napddmbpd55.sede.corp.sanpaoloimi.com
+
+
+## AKKA
+#[akka]
+#akka-1
+#akka-2
+

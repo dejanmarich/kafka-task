@@ -1,0 +1,4 @@
+- import_tasks: openjdk8_apt_install.yml
+  tags: openjdk_java_apt
+# - import_tasks: openjdk8_install.yml
+#   tags: openjdk_java

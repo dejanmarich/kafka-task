@@ -1,0 +1,101 @@
+# CONFLUENT
+version: '6.2.1'
+scala_version: '2.12'
+distribution: 'confluent-community'
+base: 'http://packages.confluent.io/archive'
+package_file: '{{ version[:3] }}/{{ distribution }}-{{ version }}.tar.gz'
+url: '{{ base }}/{{ package_file }}'
+dst_path: '/opt'
+dir_path: '{{ dst_path }}/confluent-{{ version }}/bin'
+
+#Common configuration for all services
+common:
+  java:
+    # OPENJDK8
+    openjdk:
+      general:
+        package_name: 'java-1.8.0-openjdk'
+        java_path: '/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64/bin/java'
+      environment:
+        script_name: 'jdk8.sh'
+        script_path: '/etc/profile.d'
+        JAVA_HOME: '/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64/'
+        PATH: '$PATH:$JAVA_HOME'
+      packages:
+        - 'chkconfig-1.7.4-1.el7.x86_64.rpm'
+        - 'copy-jdk-configs-3.3-10.el7_5.noarch.rpm'
+        - 'java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+        - 'java-1.8.0-openjdk-devel-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+        - 'java-1.8.0-openjdk-headless-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+        - 'ntsysv-1.7.4-1.el7.x86_64.rpm'
+
+  #COFNLUENT
+  confluent:
+    conf_dest: '/etc/confluent'
+    #ENV
+    test:
+      group: 'confluent'
+      user: 'confluent'
+      gid: '1159'
+      uid: '1160'
+      comment: 'Confluent group'
+      shell: '/bin/bash'
+      local_path: '/tmp'
+    dev:
+      group: 'confluent'
+      user: 'confluent'
+      gid: '1159'
+      uid: '1160'
+      comment: 'Confluent group'
+      shell: '/bin/bash'
+      local_path: '/tmp'
+    prod:
+      group: 'confluent'
+      user: 'confluent'
+      gid: '1159'
+      uid: '1160'
+      comment: 'Confluent group'
+      shell: '/bin/bash'
+      local_path: '/tmp'
+
+  #MIRROR_MAKER_2.0
+  mmaker:
+    schema_jar:
+      name: 'schema-registry-transfer-smt'
+      version: '0.2.1'
+      dest: 'share/java/schema-registry-transfer-smt'
+
+# CONFLUENT PACKAGES AND SYSTEM
+confluent:
+  #STATIC PART
+  comment: 'Confluent'
+  data_basepath: '/var/data'
+  initscripts_path: '/usr/sbin'
+  conf_dest: '/etc/config'
+  local:
+    files: '../files'
+  confluent_local_file: 'confluent-community-6.2.1.tar'
+  #DYNAMIC PART
+  #ENV
+  test:
+    log_basepath: '/var/log'
+  dev:
+    log_basepath: '/var/log'
+  prod:
+    log_basepath: '/var/log'
+
+  # system configuration
+  sysconfig:
+    vmswappiness_value: '1'
+    firewalld:
+      state: 'stopped'
+      startup: 'no'
+    selinux:
+      state: 'disabled'
+
+  # environment
+  environment:
+    script_name: 'confluent.sh'
+    script_path: '/etc/profile.d'
+    CONFLUENT_HOME: '/opt/confluent-6.2.1'
+    PATH: '$PATH:$CONFLUENT_HOME/bin:$PATH'

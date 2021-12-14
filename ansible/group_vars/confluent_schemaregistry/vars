@@ -1,0 +1,88 @@
+schemaregistry:
+  conf:
+  #STATIC PART OF CONFIGURATION
+    static:
+      listeners: 'http://0.0.0.0:8081'
+      zk_port: '2181'
+      brokerport: '9092'
+      data_dir: '/var/lib/schema-registry'
+  # DYNAMIC PART OF CONFIGURATION PER ENVIRONMENT
+    test:
+      zkserver1: 'kafka1.test.com'
+      zkserver2: 'kafka2.test.com'
+      zkserver3: 'kafka3.test.com'
+      broker1: 'kafka1.test.com'
+      broker2: 'kafka2.test.com'
+      broker3: 'kafka3.test.com'
+      user: 'schema-registry'
+      group: 'confluent'
+      log_dir: '/var/log/schema-registry'
+    dev:
+      zkserver1: 'kafka1.dev.com'
+      zkserver2: 'kafka2.dev.com'
+      zkserver3: 'kafka3.dev.com'
+      broker1: 'kafka1.dev.com'
+      broker2: 'kafka2.dev.com'
+      broker3: 'kafka3.dev.com'
+      user: 'schema-registry'
+      group: 'confluent'
+      log_dir: '/var/log/schema-registry'
+    prod:
+      zkserver1: 'kafka1.prod.com'
+      zkserver2: 'kafka1.prod.com'
+      zkserver3: 'kafka3.prod.com'
+      broker1: 'kafka1.prod.com'
+      broker2: 'kafka1.prod.com'
+      broker3: 'kafka3.prod.com'
+      user: 'schema-registry'
+      group: 'confluent'
+      log_dir: '/var/log/schema-registry'
+
+  service:
+  # STATIC PART OF CONFIGURATION
+    static:
+      service_name: "schema-registry"
+    # Unit
+      Description: 'RESTful Avro schema registry for Apache Kafka'
+      Documentation: 'http://docs.confluent.io'
+      Requires: 'network.target'
+      After: 'kafka.target'
+    # Service
+      Type: 'simple'
+      WorkingDirectory: '/var/lib/schema-registry'
+    # Install
+      WantedBy: 'multi-user.target'
+  # DYNAMIC PART OF CONFIGURATION PER ENVIRONMENT
+    test:
+      User: 'schema-registry'
+      Group: 'confluent'
+      log_dir: '/var/log/schema-registry'
+    dev:
+      User: 'schema-registry'
+      Group: 'confluent'
+      log_dir: '/var/log/schema-registry'
+    prod:
+      User: 'schema-registry'
+      Group: 'confluent'
+      log_dir: '/var/log/schema-registry'
+    
+  environment:
+    # DYNAMIC PART OF CONFIGURATION
+    test:
+      LOG_DIR: "/var/log/schema-registry"
+      JAVA: "$JAVA_HOME/bin/java"
+      SCHEMA_REGISTRY_HEAP_OPTS: "-Xmx500M -Xms500M"
+      SCHEMA_REGISTRY_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/schema-registry_log4j.properties"
+      SCHEMA_REGISTRY_JVM_PERFORMANCE_OPTS: "-server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -Djava.awt.headless=true"
+    dev:
+      LOG_DIR: "/var/log/schema-registry"
+      JAVA: "$JAVA_HOME/bin/java"
+      SCHEMA_REGISTRY_HEAP_OPTS: "-Xmx1000M -Xms1000M"
+      SCHEMA_REGISTRY_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/schema-registry_log4j.properties"
+      SCHEMA_REGISTRY_JVM_PERFORMANCE_OPTS: "-server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -Djava.awt.headless=true"
+    prod:
+      LOG_DIR: "/var/log/schema-registry"
+      JAVA: "$JAVA_HOME/bin/java"
+      SCHEMA_REGISTRY_HEAP_OPTS: "-Xmx4000M -Xms4000M"
+      SCHEMA_REGISTRY_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/schema-registry_log4j.properties"
+      SCHEMA_REGISTRY_JVM_PERFORMANCE_OPTS: "-server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -Djava.awt.headless=true"

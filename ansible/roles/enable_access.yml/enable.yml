@@ -1,0 +1,22 @@
+---
+
+- name: create_wanted_user 
+  user: name="{{ user }}" append=yes state=present createhome=yes shell=/bin/bash
+
+- name: allow_user_to_have_passwordless_sudo
+  lineinfile:
+    dest: /etc/sudoers
+    line: '"{{ user }}" ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: set_up_authorized_keys_for_the_user
+  authorized_key: user="{{ user }}" key="{{item}}"
+  with_file:
+    - ~/.ssh/id_rsa.pub
+
+- name: print_created_user
+  shell: id "{{ user }}"
+  register: new_user_created
+
+- debug:
+    msg: "{{ new_user_created.stdout_lines[0] }}"

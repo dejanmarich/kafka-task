@@ -1,0 +1,8 @@
+---
+- hosts: local
+  become: True
+  become_method: sudo
+  gather_facts: True
+
+  roles:
+    - ansible_set_facts

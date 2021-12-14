@@ -1,0 +1,10 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+  {%- if value is defined -%}
+    {{ label }}={{ value }}
+  {%- endif %}
+{%- endmacro -%}
+
+[Service]
+{{ insert_field_if_exists('LimitNOFILE', item['LimitNOFILE']) }}
+{{ insert_field_if_exists('LimitNPROC', item['LimitNPROC']) }}

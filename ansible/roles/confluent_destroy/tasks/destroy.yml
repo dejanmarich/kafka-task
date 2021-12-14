@@ -1,0 +1,78 @@
+# stop schema-registry service
+- name: check_if_exists_schema-registry
+  stat: path=/lib/systemd/system/schema-registry.service
+  register: schemaregistry_service_status
+
+
+- name: stop_schema-registry_service
+  systemd:
+    name: schema-registry
+    enabled: false
+    state: stopped
+    daemon-reload: yes
+  when: schemaregistry_service_status.stat.exists
+
+
+# stop kafka service
+- name: check_if_exists_kafka
+  stat: path=/lib/systemd/system/kafka.service
+  register: kafka_service_status
+
+
+- name: stop_kafka_service
+  systemd:
+    name: kafka
+    enabled: false
+    state: stopped
+    daemon-reload: yes
+  when: kafka_service_status.stat.exists
+
+
+# stop zookeeper service
+- name: check_if_exists_zookeeper
+  stat: path=/lib/systemd/system/zookeeper.service
+  register: zookeeper_service_status
+
+
+- name: stop_zookeeper_service
+  systemd:
+    name: zookeeper
+    enabled: false
+    state: stopped
+    daemon-reload: yes
+  when: zookeeper_service_status.stat.exists
+
+
+# remove all dirs
+- name: remove_confluent_dirs
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /var/log/kafka
+    - /var/log/confluent
+    - /var/log/zookeeper
+    - /home/zookeeper
+    - /var/lib/kafka
+    - /var/lib/zookeeper
+    - /etc/confluent
+    - /etc/schema-registry
+    - /etc/systemd/system/zookeeper.service.d
+    - /etc/systemd/system/multi-user.target.wants/zookeeper.service
+    - /etc/confluent/zookeeper.properties
+    - /etc/confluent/zookeeper.properties.dynamic.next
+    - /lib/systemd/system/zookeeper.service
+    - /home/kafka
+    - /etc/systemd/system/multi-user.target.wants/kafka.service
+    - /etc/confluent/kafka.environment*
+    - /lib/systemd/system/kafka.service
+    - /lib/schema-registry
+    - /var/log/schema-registry
+    - /home/schema-registry
+    - /run/sudo/ts/schema-registry
+    - /lib/systemd/system/schema-registry.service
+
+
+# remove journalctl logs
+- name: remove_journalctl_logs
+  shell: sudo ournalctl --rotate && sudo sudo journalctl --vacuum-time=1s

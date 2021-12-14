@@ -1,0 +1,2 @@
+- import_tasks: destroy.yml
+  tags: destroy

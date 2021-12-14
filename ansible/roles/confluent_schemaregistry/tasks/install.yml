@@ -1,0 +1,93 @@
+---
+
+- name: get_schema-registry_hostname_ip
+  shell: hostname -i
+  register: schemaregistry_host
+
+
+- name: print_schema-registry_host
+  debug:
+    msg: Schema-registry hostname = "{{ schemaregistry_host }}"
+
+
+- name: create_schema-registry_user
+  user:
+    name: "{{ schemaregistry.conf[appEnv].user }}"
+    group: "{{ schemaregistry.conf[appEnv].group }}"
+    system: true
+    state: present
+  register: check_user
+
+
+- name: add_schema-registry_user_to_confluent_group
+  user:
+    name: "{{ schemaregistry.conf[appEnv].user }}"
+    group: "{{ schemaregistry.conf[appEnv].group }}"
+
+
+- name: create_log_dir
+  file:
+    path: "{{ schemaregistry.conf[appEnv].log_dir }}"
+    state: directory
+    force: yes
+    owner: "{{ schemaregistry.conf[appEnv].user }}"
+    group: "{{ schemaregistry.conf[appEnv].group }}"
+
+
+- name: change_log_dir_ownership
+  file:
+    path: "{{ schemaregistry.conf[appEnv].log_dir }}"
+    owner: "{{ schemaregistry.conf[appEnv].user }}"
+    group: "{{ schemaregistry.conf[appEnv].group }}"
+    recurse: yes
+
+
+- name: create_data_dir
+  file:
+    path: "{{ schemaregistry.conf.static.data_dir }}"
+    state: directory
+    force: yes
+    owner: "{{ schemaregistry.conf[appEnv].user }}"
+    group: "{{ schemaregistry.conf[appEnv].group }}"
+
+
+- name: change_data_dir_ownership
+  file:
+    path: "{{ schemaregistry.conf.static.data_dir }}"
+    owner: "{{ schemaregistry.conf[appEnv].user }}"
+    group: "{{ schemaregistry.conf[appEnv].group }}"
+    recurse: yes
+
+
+- name: render_schema-registry_properties
+  template:
+    src: "templates/confluent_schemaregistry/schema-registry.properties.j2"
+    dest: "{{ common.confluent.conf_dest }}/schema-registry.properties"
+    owner: "{{ item[appEnv].user}}"
+    group: "{{ item[appEnv].group }}"
+    mode: 0400
+    backup: yes
+  with_items:
+    - "{{ schemaregistry.conf }}"
+
+
+- name: render_log4j_properties
+  template:
+    src: "templates/confluent_schemaregistry/schema-registry_log4j.properties.j2"
+    dest: "{{ common.confluent.conf_dest }}/schema-registry_log4j.properties"
+    mode: 0755
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+  with_items:
+    - "{{ schemaregistry.conf }}"
+
+
+- name: change_ownership_on_dirs
+  file:
+    path: "{{ item }}"
+    owner: "{{ schemaregistry.conf[appEnv].user }}"
+    group: "{{ schemaregistry.conf[appEnv].group }}"
+    mode: 0640
+  loop:
+    - "{{ common.confluent.conf_dest }}/schema-registry.properties"
+    - "{{ common.confluent.conf_dest }}/schema-registry_log4j.properties"

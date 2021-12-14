@@ -1,0 +1,17 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+  {%- if value is defined -%}
+    {{ label }}={{ value }}
+  {%- endif %}
+{%- endmacro -%}
+
+{{ insert_field_if_exists('JAVA_HOME', item.static.JAVA_HOME) }}
+{{ insert_field_if_exists('KAFKA_JMX_OPTS', item.static.KAFKA_JMX_OPTS) }}
+{{ insert_field_if_exists('KAFKA_HEAP_OPTS', item.static.KAFKA_HEAP_OPTS) }}
+{{ insert_field_if_exists('LOG_DIR', item[appEnv].LOG_DIR) }}
+CONFLUENT_SUPPORT_METRICS_ENABLE: 0
+
+[Service]
+{% for key, value in kafka.environment[appEnv].items() %}
+Environment="{{key}}={{value}}"
+{% endfor %}

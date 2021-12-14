@@ -1,0 +1,87 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+    {%- if value is defined -%}
+        {{ label }} = {{ value }}
+    {%- endif %}
+{%- endmacro -%}
+
+# Licensed to the Apache Software Foundation (ASF) under A or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# see org.apache.kafka.clients.consumer.ConsumerConfig for more details
+
+# Sample MirrorMaker 2.0 top-level configuration file
+# Run with ./bin/connect-mirror-maker.sh connect-mirror-maker.properties
+
+# specify any number of cluster aliases
+{{ insert_field_if_exists('clusters', item['clusters']) }}
+
+# connection information for each cluster
+# This is a comma separated host:port pairs for each cluster
+# for e.g. "A_host1:9092, A_host2:9092, A_host3:9092"
+{{ insert_field_if_exists('sim.bootstrap.servers', item['sim_bootstrap_servers']) }}
+{{ insert_field_if_exists('ivs.bootstrap.servers', item['ivs.bootstrap.servers']) }}
+
+# enable and configure individual replication flows
+sim->{{ insert_field_if_exists('ivs.enabled', item['ivs.enabled']) }}
+ivs->{{ insert_field_if_exists('sim.enabled', item['sim.enabled']) }}
+
+# regex which defines which topics gets replicated. For eg "foo-.*"
+sim->{{ insert_field_if_exists('ivs.topics', item['ivs.topics']) }}
+#sim->ivs.topics = test.reactive
+#sim->ivs.topics.blacklist = heartbeats, __consumer_offsets
+
+# Setting replication factor of newly created remote topics
+{{ insert_field_if_exists('replication.factor', item['replication.factor']) }}
+
+# use ByteArrayConverter to ensure that records are not re-encoded
+{{ insert_field_if_exists('key.converter', item['key.converter']) }}
+{{ insert_field_if_exists('value.converter', item['value.converter']) }}
+
+# Setup the SMT
+sim->{{ insert_field_if_exists('ivs.transforms', item['ivs.transforms']) }}
+sim->{{ insert_field_if_exists('ivs.transforms.SchemaRegistryTransfer.type', item['ivs.transforms.SchemaRegistryTransfer.type']) }}
+sim->{{ insert_field_if_exists('ivs.transforms.SchemaRegistryTransfer.transfer.message.keys', item['ivs.transforms.SchemaRegistryTransfer.transfer.message.keys']) }}
+sim->{{ insert_field_if_exists('ivs.transforms.SchemaRegistryTransfer.src.schema.registry.url', item['ivs.transforms.SchemaRegistryTransfer.src.schema.registry.url']) }}
+sim->{{ insert_field_if_exists('ivs.transforms.SchemaRegistryTransfer.dest.schema.registry.url', item['ivs.transforms.SchemaRegistryTransfer.dest.schema.registry.url']) }}
+sim->{{ insert_field_if_exists('ivs.transforms.SchemaRegistryTransfer.key.subject.name.strategy', item['ivs.transforms.SchemaRegistryTransfer.key.subject.name.strategy']) }}
+sim->{{ insert_field_if_exists('ivs.transforms.SchemaRegistryTransfer.value.subject.name.strategy', item['ivs.transforms.SchemaRegistryTransfer.value.subject.name.strategy']) }}
+sim->{{ insert_field_if_exists('ivs.transforms.SchemaRegistryTransfer.schema.capacity', item['ivs.transforms.SchemaRegistryTransfer.schema.capacity']) }}
+
+
+sim->{{ insert_field_if_exists('ivs.plugin.path', item['ivs.plugin.path']) }}
+{{ insert_field_if_exists('ivs.plugin.path', item['ivs.plugin.path']) }}
+#plugin.path=/opt/confluent-6.1.0/share/java
+
+############################# Internal Topic Settings  #############################
+# The replication factor for mm2 internal topics "heartbeats", "B.checkpoints.internal" and
+# "mm2-offset-syncs.B.internal"
+# For anything other than development testing, a value greater than 1 is recommended to ensure availability such as 3.
+{{ insert_field_if_exists('checkpoints.topic.replication.factor', item['checkpoints.topic.replication.factor']) }}
+{{ insert_field_if_exists('heartbeat.topic.replication.factor', item['heartbeat.topic.replication.factor']) }}
+{{ insert_field_if_exists('offset-syncs.topic.replication.factor', item['offset-syncs.topic.replication.factor']) }}
+
+# The replication factor for connect internal topics "mm2-configs.B.internal", "mm2-offsets.B.internal" and
+# "mm2-status.B.internal"
+# For anything other than development testing, a value greater than 1 is recommended to ensure availability such as 3.
+{{ insert_field_if_exists('offset.storage.replication.factor', item['offset.storage.replication.factor']) }}
+{{ insert_field_if_exists('status.storage.replication.factor', item['status.storage.replication.factor']) }}
+{{ insert_field_if_exists('config.storage.replication.factor', item['config.storage.replication.factor']) }}
+
+# customize as needed
+# replication.policy.separator = _
+{{ insert_field_if_exists('sync.topic.acls.enabled', item['sync.topic.acls.enabled']) }}
+{{ insert_field_if_exists('emit.heartbeats.enabled', item['emit.heartbeats.enabled']) }}
+{{ insert_field_if_exists('emit.checkpoints.enabled', item['emit.checkpoints.enabled']) }}
+# {{ insert_field_if_exists('emit.heartbeats.interval.seconds', item['emit.heartbeats.interval.seconds']) }}

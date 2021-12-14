@@ -1,0 +1,9 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+    {%- if value is defined -%}
+        {{ label }}={{ value }}
+    {%- endif %}
+{%- endmacro -%}
+{{ insert_field_if_exists('JAVA_HOME', item['JAVA_HOME']) }}
+{{ insert_field_if_exists('JVMFLAGS', item['JVMFLAGS']) }}
+{{ insert_field_if_exists('JMXPORT', item['JMXPORT']) }}

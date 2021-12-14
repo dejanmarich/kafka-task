@@ -1,0 +1,17 @@
+- hosts: "{{ confluentTarget }}" #confluent
+  become: True
+  become_method: sudo
+  gather_facts: True
+
+  vars_prompt:
+    - name: "confluentTarget"
+      prompt: "Please enter confluent_core target hosts"
+      private: no
+    - name: "appEnv"
+      prompt: "Please enter application target environment"
+      private: no
+
+  roles:
+    - confluent_core
+    - openjdk_java
+    - confluent_schemaregistry

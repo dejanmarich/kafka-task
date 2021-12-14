@@ -1,0 +1,8 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+    {%- if value is defined -%}
+        {{ label }}={{ value }}
+    {%- endif %}
+{%- endmacro -%}
+export {{ insert_field_if_exists('CONFLUENT_HOME', item.CONFLUENT_HOME) }}
+export {{ insert_field_if_exists('PATH', item.PATH) }}

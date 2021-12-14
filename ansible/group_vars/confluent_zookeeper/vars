@@ -1,0 +1,88 @@
+
+# ZOOKEEPER CONFIGURATION
+zookeeper:
+  conf:
+  #STATIC PART OF CONFIGURATION
+    static:
+      client_port: '2181'
+      leader_port: '2888'
+      election_port: '3888'
+      data_dir: '/var/lib/zookeeper'
+      maxClientCnxns: '0'
+      initLimit: '5'
+      syncLimit: '3'
+      connection_timeout: '6000'
+      tickTime: '2000'
+      log_name: 'zookeeper.log'
+      max_log_files: '20'
+      log_file_size: '256MB'
+      autopurge.snapRetainCount: '3'
+      autopurge.purgeInterval: '24'
+  #DYNAMIC PART OF CONFIGURATION (per Environment)
+  #ENV
+    test:
+      server1: 'kafka1.test.com'
+      server2: 'kafka2.test.com'
+      server3: 'kafka3.test.com'
+      log_dir: '/var/log/zookeeper'
+      user: 'zookeeper'
+      group: 'confluent'
+    dev:
+      server1: 'kafka1.dev.com'
+      server2: 'kafka2.dev.com'
+      server3: 'kafka3.dev.com'
+      log_dir: '/var/log/zookeeper'
+      user: 'zookeeper'
+      group: 'confluent'
+    prod:
+      server1: 'kafka1.prod.com'
+      server2: 'kafka2.prod.com'
+      server3: 'kafka3.prod.com'
+      log_dir: '/var/log/zookeeper'
+      user: 'zookeeper'
+      group: 'confluent'
+
+  service:
+    static:
+      service_name: "zookeeper"
+    # Unit
+      Description: 'Zookeeper server'
+      Documentation: 'http://zookeeper.apache.org'
+      Requires: 'network.target'
+      After: 'network.target'
+    # Service
+      Type: 'simple'
+      WorkingDirectory: '/var/lib/zookeeper'
+    # Install
+      WantedBy: 'multi-user.target'
+    #ENVIRONMENT
+    test:
+      User: 'zookeeper'
+      Group: 'confluent'
+    dev:
+      User: 'zookeeper'
+      Group: 'confluent'
+    prod:
+      User: 'zookeeper'
+      Group: 'confluent'
+
+  environment:
+    #STATIC PART OF CONFIGURATION
+    static:
+      KAFKA_HEAP_OPTS: "-Xmx500M -Xms500M"
+      ZOO_HOME: "{{ dst_path }}/confluent-{{ version }}"
+      #ZOO_HOME: "/opt/confluent-6.2.1"
+      KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
+    #DYNAMIC PART OF CONFIGURATION
+    test:
+      KAFKA_GC_LOG_OPTS: "-Xloggc:/var/log/zookeeper/server-gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
+      KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
+    sim:
+      KAFKA_GC_LOG_OPTS: "-Xloggc:/var/log/zookeeper/server-gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
+      KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
+    production:
+      KAFKA_GC_LOG_OPTS: "-Xloggc:/var/log/zookeeper/server-gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
+      KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
+#    JAVA_HOME: "/usr/lib/java"
+#    JVMFLAGS: "-Xms1024M -Xmx1024M"
+#    JMXPORT: "9998 -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=9998"

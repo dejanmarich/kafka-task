@@ -1,0 +1,29 @@
+#java:
+#  packages:
+#    - 'chkconfig-1.7.4-1.el7.x86_64.rpm'
+#    - 'copy-jdk-configs-3.3-10.el7_5.noarch.rpm'
+#    - 'java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+#    - 'java-1.8.0-openjdk-devel-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+#    - 'java-1.8.0-openjdk-headless-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+#    - 'ntsysv-1.7.4-1.el7.x86_64.rpm'
+#    path: '/usr/java/jdk1.8.0_242/bin/java'
+
+# JAVA
+java:
+  # OPENJDK8
+  openjdk:
+    general:
+      yum_package_name: 'java-1.8.0-openjdk'
+      java_path: '/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64/jre/bin/java'
+    environment:
+      script_name: 'jdk8.sh'
+      script_path: '/etc/profile.d'
+      JAVA_HOME: '/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64/bin/java'
+      PATH: '$PATH:$JAVA_HOME'
+    packages:
+      - 'chkconfig-1.7.4-1.el7.x86_64.rpm'
+      - 'copy-jdk-configs-3.3-10.el7_5.noarch.rpm'
+      - 'java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+      - 'java-1.8.0-openjdk-devel-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+      - 'java-1.8.0-openjdk-headless-1.8.0.242.b08-0.el7_7.x86_64.rpm'
+      - 'ntsysv-1.7.4-1.el7.x86_64.rpm'

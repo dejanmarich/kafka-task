@@ -1,0 +1,17 @@
+---
+
+- name: update_packages
+  apt:
+    upgrade: "dist"
+    update_cache: "yes"
+    cache_valid_time: 3600
+  when: ansible_distribution == 'Ubuntu'
+
+
+- name: install_packages_(openjdk)
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - openjdk-8-jdk

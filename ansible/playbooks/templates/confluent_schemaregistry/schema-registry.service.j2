@@ -1,0 +1,30 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+    {%- if value is defined -%}
+        {{ label }}={{ value }}
+    {%- endif %}
+{%- endmacro -%}
+
+
+[Unit]
+{{ insert_field_if_exists('Description', item.static.Description) }}
+{{ insert_field_if_exists('Documentation', item.static.Documentation) }}
+{{ insert_field_if_exists('Requires', item.static.Requires) }}
+{{ insert_field_if_exists('After', item.static.After) }}
+
+[Service]
+{{ insert_field_if_exists('Type', item.static.Type) }}
+{{ insert_field_if_exists('User', item[appEnv].User) }}
+{{ insert_field_if_exists('Group', item[appEnv].Group) }}
+{{ insert_field_if_exists('WorkingDirectory', item.static.WorkingDirectory) }}
+ExecStart={{ dir_path }}/schema-registry-start {{ common.confluent.conf_dest }}/schema-registry.properties
+ExecStop={{ dir_path }}/schema-registry-stop
+TimeoutStopSec=180
+
+
+{% for key, value in schemaregistry.environment[appEnv].items() %}
+Environment="{{key}}={{value}}"
+{% endfor %}
+
+[Install]
+{{ insert_field_if_exists('WantedBy', item.static.WantedBy) }}

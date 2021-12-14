@@ -1,0 +1,118 @@
+---
+
+- name: get_zookeeper_hostname
+  shell: hostname --all-fqdns
+  register: zookeeper_host
+
+
+- name: print_zookeeper_host
+  debug:
+    msg: Zookeeper hostname = "{{ zookeeper_host}}"
+
+
+- name: create_zookeeper_user
+  user:
+    name: "{{ zookeeper.conf[appEnv].user }}"
+    group: "{{ zookeeper.conf[appEnv].group }}"
+    system: true
+    state: present
+  register: check_user
+
+
+- name: add_zookeeper_user_to_confluent_group
+  user:
+    name: "{{ zookeeper.conf[appEnv].user }}"
+    group: "{{ zookeeper.conf[appEnv].group }}"
+
+
+
+- name: create_data_dir
+  file:
+    path: "{{ zookeeper.conf.static.data_dir }}"
+    owner: "{{ zookeeper.conf[appEnv].user }}"
+    group: "{{ zookeeper.conf[appEnv].group }}"
+    mode: 0755
+    state: directory
+    force: yes
+
+
+- name: create_conf_dir
+  file:
+    path: "{{ common.confluent.conf_dest }}"
+    state: directory
+    force: yes
+    owner: "{{ zookeeper.conf[appEnv].user }}"
+    group: "{{ zookeeper.conf[appEnv].group }}"
+
+
+- name: change_data_dir_ownership
+  file:
+    path: "{{ zookeeper.conf.static.data_dir }}"
+    owner: "{{ zookeeper.conf[appEnv].user}}"
+    group: "{{zookeeper.conf[appEnv].group }}"
+    recurse: yes
+
+
+- name: create_log_dir
+  file:
+    path: "{{ zookeeper.conf[appEnv].log_dir }}"
+    state: directory
+    force: yes
+    owner: "{{ zookeeper.conf[appEnv].user }}"
+    group: "{{ zookeeper.conf[appEnv].group }}"
+
+
+
+- name: change_log_dir_ownership
+  file:
+    path: "{{ zookeeper.conf[appEnv].log_dir }}"
+    owner: "{{ zookeeper.conf[appEnv].user}}"
+    group: "{{ zookeeper.conf[appEnv].group }}"
+    recurse: yes
+
+
+- name: render_zookeeper_properties
+  template:
+    src: "templates/confluent_zookeeper/zookeeper.properties.j2"
+    dest: "{{ common.confluent.conf_dest }}/zookeeper.properties"
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    mode: 0400
+    backup: yes
+  with_items:
+    - "{{ zookeeper.conf }}"
+  register: zookeeper_properties
+
+
+- name: render_zookeeper_myid_file
+  template:
+    src: "templates/confluent_zookeeper/myid.j2"
+    dest: "{{ item.static.data_dir }}/myid"
+    mode: 0555
+    owner: "{{ item[appEnv].user}}"
+    group: "{{ item[appEnv].group }}"
+  with_items:
+    - "{{ zookeeper.conf }}"
+
+
+- name: render_log4j_properties
+  template:
+    src: "templates/confluent_zookeeper/zookeeper_log4j.properties.j2"
+    dest: "{{ common.confluent.conf_dest }}/zookeeper_log4j.properties"
+    mode: 0755
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+  with_items:
+    - "{{ zookeeper.conf }}"
+
+
+- name: change_zookeeper_ownership_dirs
+  file:
+    path: "{{ item }}"
+    owner: "{{ zookeeper.conf[appEnv].user }}"
+    group: "{{ zookeeper.conf[appEnv].group }}"
+    mode: 0640
+  loop:
+    - "{{ common.confluent.conf_dest }}/zookeeper.properties"
+    - "{{ zookeeper.conf.static.data_dir }}/myid"
+    - "{{ common.confluent.conf_dest }}/zookeeper_log4j.properties"

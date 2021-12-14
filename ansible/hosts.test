@@ -1,0 +1,29 @@
+[local]
+localhost ansible_connection=local
+[all:children]
+confluent_core
+confluent_kafka
+confluent_schemaregistry
+
+# CONFLUENT-CORE
+[confluent_core]
+confluent-1 ansible_host=kafka1.test.com
+confluent-2 ansible_host=kafka2.test.com
+confluent-3 ansible_host=kafka3.test.com
+
+# CONFLUENT-ZOOKEEPER
+[confluent_zookeeper]
+zookeeper-1 ansible_host=kafka1.test.com
+zookeeper-2 ansible_host=kafka2.test.com
+zookeeper-3 ansible_host=kafka3.test.com
+
+# CONFLUENT-KAFKA
+[confluent_kafka]
+kafkabroker-1 ansible_host=kafka1.test.com
+kafkabroker-2 ansible_host=kafka2.test.com
+kafkabroker-3 ansible_host=kafka3.test.com
+
+# CONFLUENT-SCHEMAREGISTRY
+[confluent_schemaregistry]
+schemaregistry-1 ansible_host=schema1.test.com
+schemaregistry-2 ansible_host=schema2.test.com

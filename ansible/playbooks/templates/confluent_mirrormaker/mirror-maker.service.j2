@@ -1,0 +1,25 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+{% macro insert_field_if_exists(label, value) -%}
+    {%- if value is defined -%}
+        {{ label }}={{ value }}
+    {%- endif %}
+{%- endmacro -%}
+
+[Unit]
+{{ insert_field_if_exists('Description', item['Description']) }}
+{{ insert_field_if_exists('Documentation', item['Documentation']) }}
+{{ insert_field_if_exists('Requires', item['Requires']) }}
+{{ insert_field_if_exists('After', item['After']) }}
+[Service]
+{{ insert_field_if_exists('Type', item['Type']) }}
+{{ insert_field_if_exists('User', item['User']) }}
+{{ insert_field_if_exists('Group', item['Group']) }}
+{{ insert_field_if_exists('WorkingDirectory', item['WorkingDirectory']) }}
+ExecStart={{ dir_path }}/connect-mirror-maker {{ common.confluent.conf_dest }}/mm2-connect-mirror-maker-cluster.properties
+
+{% for key, value in mirrormaker.environment.items() %}
+Environment="{{key}}={{value}}"
+{% endfor %}
+
+[Install]
+{{ insert_field_if_exists('WantedBy', item['WantedBy']) }}

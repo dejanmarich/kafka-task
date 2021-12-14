@@ -1,0 +1,43 @@
+- name: copy_jolokia_agent
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "{{ kafka.jolokia.dest }}/jolokia-agent.jar"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ kafka.jolokia.packages }}"
+
+
+- name: change_owner_to_jolokia_jar
+  file:
+    path: "{{ kafka.jolokia.dest }}/jolokia-agent.jar"
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    mode: 0775
+  with_items:
+    - "{{ common.confluent }}"
+
+
+- name: backup_original_kafka_server_start
+  copy:
+    src: "{{ dir_path }}/kafka-server-start"
+    dest: "{{ dir_path }}/kafka-server-start.orig"
+    remote_src: yes
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    mode: 0775
+  with_items:
+    - "{{ kafka.conf }}"
+
+
+- name: render_kafka_server_start
+  template:
+    src: "templates/confluent_kafka/kafka-server-start.j2"
+    dest: "{{ dir_path }}/kafka-server-start"
+    owner: "{{ item[appEnv].user }}"
+    group: "{{ item[appEnv].group }}"
+    mode: 0755
+    backup: yes
+  with_items:
+    - "{{ common.confluent }}"
+  register: kafka_server_start
