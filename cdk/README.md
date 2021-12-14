@@ -1,9 +1,9 @@
 ## Deployment of AWS components (EC2, IAM, ROUTE53, NLB)
 
-Prerequisites: </br>
-**AWS Account** </br>
-**Node.js >=10.13** </br>
-**aws-cdk toolkit** (https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
+### Prerequisites: </br>
+*AWS Account* </br>
+*Node.js >=10.13* </br>
+*aws-cdk toolkit* (https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 
 IAC is divided into the following stacks:
 
