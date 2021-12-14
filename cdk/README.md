@@ -19,7 +19,7 @@ SchemaStack
 Run `cdk deploy <StackName>` to execute Stack.
 
 </br>
-## Deployment order:
+# Deployment order:
 1. Deploy `IAMStack` to create IAM Roles, Policies and attach them to Users
 2. Deploy `DnsStack` to assign `PVC` and create `PrivateHostedZone`
 3. Deploy `KafkaStack` to create 3 EC2 instances for `Zookeeper` and `Kafka` with private `ARecords` and `NLB`. The output should look like this:
@@ -49,7 +49,7 @@ MicroserviceStack.sshcommand = ssh -i microservice.pem -o IdentitiesOnly=yes ubu
 
 You can now connect to the Microservice EC2 instance with provided credentials.
 
-## Tests
+# Tests
 
 * Test DNS resolving
 ```
