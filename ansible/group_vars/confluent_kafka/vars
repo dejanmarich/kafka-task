@@ -59,9 +59,7 @@ kafka:
       auto_leader_rebalance_enable: 'true'
       controlled_shutdown_enable: 'true'
       controlled_shutdown_max_retries: '3'
-      #listeners: 'PLAINTEXT://kafka-1:9092'
       listeners_protocol: 'PLAINTEXT'
-      #listeners_host: 'kafka-1'
       listeners_port: '9092'
       broker_id_generation_enable: 'false'
       num_network_threads: '3'
@@ -84,7 +82,6 @@ kafka:
       log_segment_bytes: '1073741824'
       log_retention_check_interval_ms: '60000'
       log_roll_hours: '96'
-      #zookeeper_connect: 'kafka-1:2181,kafka-2:2181,kafka-3:2181'
       zk_port: '2181'
       zookeeper_connection_timeout_ms: '6000'
       group_initial_rebalance_delay_ms: '3000'
@@ -95,17 +92,17 @@ kafka:
       zkserver1: 'kafka1.test.com'
       zkserver2: 'kafka2.test.com'
       zkserver3: 'kafka3.test.com'
-      #advertised_listeners_suffix: '.myapp.test.com:9092'
+      #advertised_listeners_suffix: '.test.com:9092'
     dev:
       zkserver1: 'kafka1.dev.com'
       zkserver2: 'kafka2.dev.com'
       zkserver3: 'kafka3.dev.com'
-      #advertised_listeners_suffix: '.myapp.dev.com:9092'
+      #advertised_listeners_suffix: '.dev.com:9092'
     prod:
       zkserver1: 'kafka1.prod.com'
       zkserver2: 'kafka2.prod.com'
       zkserver3: 'kafka3.prod.com'
-      #advertised_listeners_suffix: '.myapp.prod.com:9092'
+      #advertised_listeners_suffix: '.prod.com:9092'
 
 
   # environment

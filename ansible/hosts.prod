@@ -1,87 +1,29 @@
 [local]
 localhost ansible_connection=local
+[all:children]
+confluent_core
+confluent_kafka
+confluent_schemaregistry
 
-###################################
+# CONFLUENT-CORE
+[confluent_core]
+confluent-1 ansible_host=kafka1.prod.com
+confluent-2 ansible_host=kafka2.prod.com
+confluent-3 ansible_host=kafka3.prod.com
 
-# ELASTICSEARCH
-[elasticsearch:children]
-kibana
-logstash
-esmaster
-esdata
-esclient
-[esmaster]
-es-master-1 ansible_host=
-es-master-2 ansible_host=
-[esdata]
-es-data-1 ansible_host=
-es-data-2 ansible_host=
-es-data-3 ansible_host=
-es-data-4 ansible_host=
-[esclient]
-es-client-1 ansible_host=
-es-client-2 ansible_host=
-[kibana]
-kibana-1 ansible_host=
-[logstash]
-logstash-1 ansible_host=
+# CONFLUENT-ZOOKEEPER
+[confluent_zookeeper]
+zookeeper-1 ansible_host=kafka1.prod.com
+zookeeper-2 ansible_host=kafka2.prod.com
+zookeeper-3 ansible_host=kafka3.prod.com
 
+# CONFLUENT-KAFKA
+[confluent_kafka]
+kafkabroker-1 ansible_host=kafka1.prod.com
+kafkabroker-2 ansible_host=kafka2.prod.com
+kafkabroker-3 ansible_host=kafka3.prod.com
 
-# CASSANDRA
-[cassandra]
-cassandra-1 ansible_host=
-cassandra-2 ansible_host=
-cassandra-3 ansible_host=
-cassandra-4 ansible_host=
-cassandra-5 ansible_host=
-
-
-# CLOUDERA
-[cloudera:children]
-cmanager
-chost
-hdfsnamenode
-hdfsdatanode
-hdfshanode
-posgtresql
-
-[cmanager]
-cmanager-1 ansible_host=
-[chost]
-chost-1 ansible_host=
-chost-2 ansible_host=
-
-[hdfsnamenode]
-hdfsnamenode-1 ansible_host=
-hdfsnamenode-2 ansible_host=
-[hdfsdatanode]
-hdfsdatanode-1 ansible_host=
-hdfsdatanode-2 ansible_host=
-hdfsdatanode-3 ansible_host=
-hdfsdatanode-4 ansible_host=
-[hdfshanode]
-hdfshanode-1 ansible_host=
-hdfshanode-2 ansible_host=
-hdfshanode-3 ansible_host=
-
-[postgresql]
-postgresql-1 ansible_host=
-postgresql-2 ansible_host=
-
-
-# KAFKA
-[kafka:children]
-kafkabroker
-zookeeper
-[kafkabroker]
-kafkabroker-1 ansible_host=
-kafkabroker-2 ansible_host=
-kafkabroker-3 ansible_host=
-[zookeeper]
-zookeeper-1 ansible_host=
-zookeeper-2 ansible_host=
-
-
-
-
-
+# CONFLUENT-SCHEMAREGISTRY
+[confluent_schemaregistry]
+schemaregistry-1 ansible_host=schema1.prod.com
+schemaregistry-2 ansible_host=schema2.prod.com

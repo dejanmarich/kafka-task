@@ -9,14 +9,14 @@ Prerequisites:
 
 # Prepare repos
 
-Clone the repo from github to your destination on the Ansible controller machine. This setup was designed to make deployment of various Confluent components on multiple environments and servers (test, dev, production, etc.). Playbooks are separated for each service, in case you want to run `Zookeeper` on 3 nodes, and `Kafka` on 4 nodes or similar.
+Clone the repo from GitHub to your destination on the Ansible controller machine (provided in cdk deployment). This setup was designed to make deployment of various Confluent components on multiple environments and servers (test, dev, production, etc.). Playbooks are separated for each service, in case you want to run `Zookeeper` on 3 nodes, and `Kafka` on 4 nodes or similar.
 
-Example for deploying *Zookeeper* and *Kafka* on 3 node cluster in *test* environment.  
+Example for deploying *Zookeeper* and *Kafka* on 3 node cluster in a *test* environment.  
 List of playbooks:
 **confluent_core.yml** - get confluent packages with necessary binary files /opt/confluent-{version}/<br/>
 **confluent_zookeeper.yml** - deploy Zookeeper <br/>
 **confluent_kafka.yml** - deploy Kafka<br/>
-**confluent_destroy.yml** - if something goes wrong, run it to delete everything so you can start from the scratch (except for package download)
+**confluent_destroy.yml** - if something goes wrong, run it to delete everything so you can start from scratch (except for package download)
 1. Create hosts file or change existing file. (e.g. hosts.test):
 ```
 # CONFLUENT-CORE
@@ -53,31 +53,31 @@ Open `group_vars -> confluent_{service} -> vars` and edit environment servers
       ...
 ````
 
-After changes were made, we can run playbooks. Each playook has `extra vars` parameters for `confluentTarget` (targets are Kafka, Zookeeper, and Schema Registry), and `appEnv` (environments are dev, test and prod).
+After changes were made, we can run playbooks. Each playbook has `extra vars` parameters for `confluentTarget` (targets are Kafka, Zookeeper, and Schema Registry), and `appEnv` (environments are dev, test, and prod).
 
 # Deploy confluent_core playbook
-This will get the confluent community package from the internet, unzip and delete zip file on target machines. It will also setup users, install openjdk8, and all other neccessary prerequisits for Confluent services. 
+This will get the confluent community package from the internet, unzip and delete zip file on target machines. It will also set up users, install openjdk8, and all other necessary prerequisites for Confluent services. 
 
 `ansible-playbook playbooks/confluent_core.yml -i hosts.test --private-key="mykey.pem" --extra-vars="confluentTarget=confluent_core appEnv=test" -v --diff`
 
 # Deploy confluent_zookeeper playbook
-This will setup Zookeeper on targeted instances
+This will set up Zookeeper on targeted instances
 
 `ansible-playbook playbooks/confluent_zookeeper.yml -i hosts.test --private-key="mykey.pem" --extra-vars="confluentTarget=confluent_zookeeper appEnv=test" -v --diff` 
 
 # Deploy confluent_kafka playbook
-This will setup Kafka on targeted instances
+This will set up Kafka on targeted instances
 
 `ansible-playbook playbooks/confluent_kafka.yml -i hosts.test --private-key="mykey.pem" --extra-vars="confluentTarget=confluent_kafka appEnv=test" -v --diff`
 
 # Deploy confluent_schemaregistry playbook
-This will setup Schema Registry on targeted instances
+This will set up Schema Registry on targeted instances
 
 `ansible-playbook playbooks/confluent_schemaregistry.yml -i hosts.test --private-key="mykey.pem" --extra-vars="confluentTarget=confluent_schemaregistry appEnv=test" -v --diff`
 
 
 # Troubleshooting
-* If you don't have correct sudo access to the remote target instances, in playbook add command `--ask-become-pass` and after executing playbook, enter sudo password for user "ubuntu".
+* If you don't have correct sudo access to the remote target instances, in playbook add the command `--ask-become-pass` and after executing playbook, enter sudo password for user "ubuntu".
 * If you don't have ssh key, you will need to create ssh user and authorized key by calling `enable_access.yml` playbook:
 `ansible-playbook playbooks/enable_access.yml -i hosts.test --private-key="mykey.pem" --extra-vars="confluentTarget=all appEnv=test" -v --diff`
 

@@ -8,7 +8,7 @@ url: '{{ base }}/{{ package_file }}'
 dst_path: '/opt'
 dir_path: '{{ dst_path }}/confluent-{{ version }}/bin'
 
-#Common configuration for all services
+# common configuration for all services
 common:
   java:
     # OPENJDK8

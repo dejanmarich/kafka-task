@@ -71,7 +71,6 @@ zookeeper:
     static:
       KAFKA_HEAP_OPTS: "-Xmx500M -Xms500M"
       ZOO_HOME: "{{ dst_path }}/confluent-{{ version }}"
-      #ZOO_HOME: "/opt/confluent-6.2.1"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
     #DYNAMIC PART OF CONFIGURATION
     test:
