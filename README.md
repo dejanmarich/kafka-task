@@ -2,8 +2,8 @@
 
 Repository is divided into 2 parts:  <br/>
 
-**cdk/ec2**  - `aws-cdk` code for infrastructure provisioning written in `Typescript` <br/>
-**ansible-cp** - `Ansible` playbook for Confluent Community service provisioning
+**cdk**  - `aws-cdk` code for infrastructure provisioning written in `Typescript` <br/>
+**ansible** - `Ansible` playbook for Confluent Community service provisioning
 
 Prerequisites: <br/>
 **AWS Account**  <br/>
