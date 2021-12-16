@@ -62,7 +62,7 @@ Name:	kafka1.test.com
 Address: 172.31.20.113
 ```
 
-* Test LoadBalancer 
+* Test Kafka LoadBalancer 
 ```
 ubuntu@p-172-31-31-185:~$ kafkacat -b KafkaLB-02dacce20d4dc712.elb.us-east-1.amazonaws.com -t test1
 % Auto-selecting Consumer mode (use -P or -C to override)
@@ -79,7 +79,7 @@ Dec 14 21:18:12 ip-172-31-31-185 systemd[1]: packagekit.service: Succeeded.
 % Reached end of topic test1 [0] at offset 10
 ```
 
-* Test private DNS 
+* Test Kafka private DNS 
 ```
 ubuntu@ip-172-31-31-185:/$ kafkacat -b kafka1.test.com -t test1
 % Auto-selecting Consumer mode (use -P or -C to override)
@@ -94,4 +94,22 @@ Dec 14 21:17:01 ip-172-31-31-185 CRON[14036]: (root) CMD (  cd / && run-parts --
 Dec 14 21:18:12 ip-172-31-31-185 PackageKit: daemon quit
 Dec 14 21:18:12 ip-172-31-31-185 systemd[1]: packagekit.service: Succeeded.
 % Reached end of topic test1 [0] at offset 10
+```
+
+* Test Schema Registry
+```
+ubuntu@ip-172-31-31-185:~$ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+>   --data '{"schema": "{\"type\": \"string\"}"}' \
+>   http://schema1.test.com:8081/subjects/Kafka-key/versions
+{"id":1}
+ubuntu@ip-172-31-31-185:~$ curl -XGET http://schema1.test.com:8081/subjects
+["Kafka-key"]
+ubuntu@ip-172-31-31-185:~$ curl -XGET http://schema2.test.com:8081/subjects
+["Kafka-key"]
+```
+
+* Test Schema Registry Load Balancer
+```
+ubuntu@ip-172-31-31-185:~$ curl -XGET http://SchemaLB-0f973b7c3a309242.elb.us-east-1.amazonaws.com:8081/subjects
+["Kafka-key"]
 ```

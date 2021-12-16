@@ -57,7 +57,7 @@ export class MicroStack extends cdk.Stack {
       privateZone: true 
     })
 
-    new route53.ARecord(this, 'CnameRecord6', {
+    new route53.ARecord(this, 'AnameRecord6', {
       zone: zone,
       recordName: 'microservice',
       target: route53.RecordTarget.fromIpAddresses(microService.instancePrivateIp),

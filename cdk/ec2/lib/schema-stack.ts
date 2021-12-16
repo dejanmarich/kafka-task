@@ -91,14 +91,14 @@ export class SchemaStack extends cdk.Stack {
         privateZone: true 
       })
 
-    new route53.ARecord(this, 'CnameRecord1', {
+    new route53.ARecord(this, 'AnameRecord1', {
         zone: zone,
         recordName: 'schema1',
         target: route53.RecordTarget.fromIpAddresses(instance1.instancePrivateIp),
         ttl: cdk.Duration.minutes(1),   
     });
 
-    new route53.ARecord(this, 'CnameRecord2', {
+    new route53.ARecord(this, 'AnameRecord2', {
         zone: zone,
         recordName: 'schema2',
         target: route53.RecordTarget.fromIpAddresses(instance2.instancePrivateIp),

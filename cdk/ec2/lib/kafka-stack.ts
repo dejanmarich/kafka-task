@@ -109,21 +109,21 @@ export class kafkaStack extends cdk.Stack {
   })   
     new cdk.CfnOutput(this, 'IP Address for Kafka LB:', { value: lb.loadBalancerDnsName });
 
-    new route53.ARecord(this, 'CnameRecord3', {
+    new route53.ARecord(this, 'AnameRecord3', {
       zone: zone,
       recordName: 'kafka1',
       target: route53.RecordTarget.fromIpAddresses(instance1.instancePrivateIp),
       ttl: cdk.Duration.minutes(1),   
     });
 
-    new route53.ARecord(this, 'CnameRecord4', {
+    new route53.ARecord(this, 'AnameRecord4', {
       zone: zone,
       recordName: 'kafka2',
       target: route53.RecordTarget.fromIpAddresses(instance2.instancePrivateIp),
       ttl: cdk.Duration.minutes(1),   
     });
 
-    new route53.ARecord(this, 'CnameRecord5', {
+    new route53.ARecord(this, 'AnameRecord5', {
       zone: zone,
       recordName: 'kafka3',
       target: route53.RecordTarget.fromIpAddresses(instance3.instancePrivateIp),
