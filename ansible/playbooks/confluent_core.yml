@@ -14,4 +14,4 @@
 
   roles:
     - confluent_core
-    - openjdk_java
+  # - openjdk_java

@@ -1,6 +1,6 @@
 # CONFLUENT
-version: '6.2.1'
-scala_version: '2.12'
+version: '7.1.1'
+scala_version: '2.13'
 distribution: 'confluent-community'
 base: 'http://packages.confluent.io/archive'
 package_file: '{{ version[:3] }}/{{ distribution }}-{{ version }}.tar.gz'
@@ -74,7 +74,7 @@ confluent:
   conf_dest: '/etc/config'
   local:
     files: '../files'
-  confluent_local_file: 'confluent-community-6.2.1.tar'
+  confluent_local_file: 'confluent-community-7.1.1.tar'
   #DYNAMIC PART
   #ENV
   test:
@@ -97,5 +97,5 @@ confluent:
   environment:
     script_name: 'confluent.sh'
     script_path: '/etc/profile.d'
-    CONFLUENT_HOME: '/opt/confluent-6.2.1'
+    CONFLUENT_HOME: '/opt/confluent-7.1.1'
     PATH: '$PATH:$CONFLUENT_HOME/bin:$PATH'

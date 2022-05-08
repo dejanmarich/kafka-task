@@ -83,7 +83,7 @@ kafka:
       log_retention_check_interval_ms: '60000'
       log_roll_hours: '96'
       zk_port: '2181'
-      zookeeper_connection_timeout_ms: '6000'
+      zookeeper_connection_timeout_ms: '10000'
       group_initial_rebalance_delay_ms: '3000'
       confluent_support_metrics_enable: 'false'
     # DYNAMIC PART OF CONFIGURATION (appEnv)
@@ -92,6 +92,7 @@ kafka:
       zkserver1: 'kafka1.test.com'
       zkserver2: 'kafka2.test.com'
       zkserver3: 'kafka3.test.com'
+
       #advertised_listeners_suffix: '.test.com:9092'
     dev:
       zkserver1: 'kafka1.dev.com'
@@ -113,7 +114,7 @@ kafka:
   # DYNAMIC PART OF CONFIGURATION (appEnv)
     test:
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=true -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
-      KAFKA_HEAP_OPTS: "-Xmx500M -Xms500M"
+      KAFKA_HEAP_OPTS: "-Xmx8000M -Xms8000M"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/server_log4j.properties"
       LOG_DIR: "/var/log/kafka"
     dev:
