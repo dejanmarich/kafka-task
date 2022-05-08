@@ -37,6 +37,11 @@
    state: present
 
 
+- name: pause_15_seconds
+  pause:
+    seconds: 15
+
+
 - name: check_which_zookeeper_node_is_leader/follower
   shell: echo stat | nc {{ zookeeper_host.stdout }} 2181 | grep Mode
 
