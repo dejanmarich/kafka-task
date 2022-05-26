@@ -120,3 +120,19 @@
   shell: echo $CONFLUENT_HOME
   args:
     executable: /bin/bash
+
+- name: check_if_java_exists
+  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: java_installed
+
+- name: print_java_version
+  debug: 
+    msg: "{{ java_installed }}"
+  when: java_installed.rc==0
+
+- name: install_openjdk_11_java
+  apt: 
+    name: openjdk-11-jdk
+    state: present  
+    update_cache: yes
+  when: java_version.rc!=0
