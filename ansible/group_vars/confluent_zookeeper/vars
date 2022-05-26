@@ -21,9 +21,9 @@ zookeeper:
   #DYNAMIC PART OF CONFIGURATION (per Environment)
   #ENV
     test:
-      server1: 'kafka1.test.com'
-      server2: 'kafka2.test.com'
-      server3: 'kafka3.test.com'
+      server1: '192.168.100.250'
+      server2: '192.168.100.251'
+      server3: '192.168.100.252'
       log_dir: '/var/log/zookeeper'
       user: 'zookeeper'
       group: 'confluent'

@@ -1,3 +1,4 @@
+## DB-ROSE MIRROR 
 [local]
 localhost ansible_connection=local
 [all:children]
@@ -7,21 +8,21 @@ confluent_schemaregistry
 
 # CONFLUENT-CORE
 [confluent_core]
-confluent-1 ansible_host=kafka1.test.com
-confluent-2 ansible_host=kafka2.test.com
-confluent-3 ansible_host=kafka3.test.com
+confluent-1 ansible_host=192.168.100.250
+confluent-2 ansible_host=192.168.100.251
+confluent-3 ansible_host=192.168.100.252
 
 # CONFLUENT-ZOOKEEPER
 [confluent_zookeeper]
-zookeeper-1 ansible_host=kafka1.test.com
-zookeeper-2 ansible_host=kafka2.test.com
-zookeeper-3 ansible_host=kafka3.test.com
+zookeeper-1 ansible_host=192.168.100.250
+zookeeper-2 ansible_host=192.168.100.251
+zookeeper-3 ansible_host=192.168.100.252
 
 # CONFLUENT-KAFKA
 [confluent_kafka]
-kafkabroker-1 ansible_host=kafka1.test.com
-kafkabroker-2 ansible_host=kafka2.test.com
-kafkabroker-3 ansible_host=kafka3.test.com
+kafkabroker-1 ansible_host=192.168.100.250
+kafkabroker-2 ansible_host=192.168.100.251
+kafkabroker-3 ansible_host=192.168.100.252
 
 # CONFLUENT-SCHEMAREGISTRY
 [confluent_schemaregistry]

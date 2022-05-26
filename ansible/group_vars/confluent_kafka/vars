@@ -89,9 +89,9 @@ kafka:
     # DYNAMIC PART OF CONFIGURATION (appEnv)
     # ENV
     test:
-      zkserver1: 'kafka1.test.com'
-      zkserver2: 'kafka2.test.com'
-      zkserver3: 'kafka3.test.com'
+      zkserver1: '192.168.100.250'
+      zkserver2: '192.168.100.251'
+      zkserver3: '192.168.100.252'
 
       #advertised_listeners_suffix: '.test.com:9092'
     dev:
@@ -114,7 +114,7 @@ kafka:
   # DYNAMIC PART OF CONFIGURATION (appEnv)
     test:
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=true -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
-      KAFKA_HEAP_OPTS: "-Xmx8000M -Xms8000M"
+      KAFKA_HEAP_OPTS: "-Xmx24000M -Xms24000M"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/server_log4j.properties"
       LOG_DIR: "/var/log/kafka"
     dev:
