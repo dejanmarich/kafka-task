@@ -49,13 +49,15 @@ broker.id={{ inventory_hostname [-1] }}
 #   EXAMPLE:
 #     listeners = PLAINTEXT://your.host.name:9092
 #listeners=PLAINTEXT://localhost:9092
-listeners={{ item.static.listeners_protocol }}://{{ ansible_default_ipv4.address }}:{{ item.static.listeners_port }}
+#listeners={{ item.static.listeners_protocol }}://{{ ansible_default_ipv4.address }}:{{ item.static.listeners_port }}
+listeners={{ item.static.listeners_protocol }}://{{ ansible_ssh_host }}:{{ item.static.listeners_port }}
 {{ insert_field_if_exists('broker.id.generation.enable', item.static.broker_id_generation_enable) }}
 
 # Hostname and port the broker will advertise to producers and consumers. If not set, 
 # it uses the value for "listeners" if configured.  Otherwise, it will use the value
 # returned from java.net.InetAddress.getCanonicalHostName().
-advertised.listeners=PLAINTEXT://{{ ansible_default_ipv4.address }}:9092
+# advertised.listeners=PLAINTEXT://{{ ansible_default_ipv4.address }}:9092
+advertised.listeners=PLAINTEXT://{{ ansible_ssh_host }}:9092
 
 # Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details
 #listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
