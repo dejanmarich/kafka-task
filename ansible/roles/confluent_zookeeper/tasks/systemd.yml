@@ -43,13 +43,13 @@
 
 
 - name: check_which_zookeeper_node_is_leader/follower
-  shell: echo stat | nc {{ zookeeper_host.stdout }} 2181 | grep Mode
+  shell: echo stat | nc {{ ansible_ssh_host }} 2181 | grep Mode
 
 
 - name: check_zookeeper_server_status
-  shell: echo srvr | nc {{ zookeeper_host.stdout }} 2181
+  shell: echo srvr | nc {{ ansible_ssh_host }} 2181
 
 
 - name: check_zookeeper_connections
-  shell: echo cons | nc {{ zookeeper_host.stdout }} 2181
+  shell: echo cons | nc {{ ansible_ssh_host }} 2181
 
