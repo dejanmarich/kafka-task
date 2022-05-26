@@ -90,8 +90,8 @@ kafka:
     # ENV
     test:
       zkserver1: '192.168.100.250'
-      zkserver2: '192.168.100.251'
-      zkserver3: '192.168.100.252'
+      zkserver2: '192.168.100.252'
+      zkserver3: '192.168.100.253'
 
       #advertised_listeners_suffix: '.test.com:9092'
     dev:
