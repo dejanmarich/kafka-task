@@ -76,6 +76,7 @@ zookeeper:
     test:
       KAFKA_GC_LOG_OPTS: "-Xloggc:/var/log/zookeeper/server-gc.log -verbose:gc"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
+      JMX_PORT: "9998"
     sim:
       KAFKA_GC_LOG_OPTS: "-Xloggc:/var/log/zookeeper/server-gc.log -verbose:gc"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
@@ -85,4 +86,4 @@ zookeeper:
 #    JAVA_HOME: "/usr/lib/java"
 #    JVMFLAGS: "-Xms1024M -Xmx1024M"
 #    JMX_PORT: "9998 -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=9998"
-      JMX_PORT: "9998"
+      
