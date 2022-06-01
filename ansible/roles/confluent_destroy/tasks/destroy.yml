@@ -75,4 +75,4 @@
 
 # remove journalctl logs
 - name: remove_journalctl_logs
-  shell: sudo ournalctl --rotate && sudo sudo journalctl --vacuum-time=1s
+  shell: sudo journalctl --rotate && sudo journalctl --vacuum-time=1s
