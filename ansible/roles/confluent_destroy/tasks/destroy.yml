@@ -76,3 +76,6 @@
 # remove journalctl logs
 - name: remove_journalctl_logs
   shell: sudo journalctl --rotate && sudo journalctl --vacuum-time=1s
+
+- name: systemctl_reload
+  shell: sudo systemctl daemon-reload
