@@ -84,4 +84,5 @@ zookeeper:
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
 #    JAVA_HOME: "/usr/lib/java"
 #    JVMFLAGS: "-Xms1024M -Xmx1024M"
-#    JMXPORT: "9998 -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=9998"
+#    JMX_PORT: "9998 -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=9998"
+      JMX_PORT: "9998"
