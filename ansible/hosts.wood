@@ -1,0 +1,30 @@
+## WOOD
+[local]
+localhost ansible_connection=local
+[all:children]
+confluent_core
+confluent_kafka
+confluent_schemaregistry
+
+# CONFLUENT-CORE
+[confluent_core]
+confluent-1 ansible_host=192.168.100.250
+confluent-2 ansible_host=192.168.100.252
+confluent-3 ansible_host=192.168.100.253
+
+# CONFLUENT-ZOOKEEPER
+[confluent_zookeeper]
+zookeeper-1 ansible_host=192.168.100.250
+zookeeper-2 ansible_host=192.168.100.252
+zookeeper-3 ansible_host=192.168.100.253
+
+# CONFLUENT-KAFKA
+[confluent_kafka]
+kafkabroker-1 ansible_host=192.168.100.250
+kafkabroker-2 ansible_host=192.168.100.252
+kafkabroker-3 ansible_host=192.168.100.253
+
+# CONFLUENT-SCHEMAREGISTRY
+[confluent_schemaregistry]
+schemaregistry-1 ansible_host=schema1.test.com
+schemaregistry-2 ansible_host=schema2.test.com

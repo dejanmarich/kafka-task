@@ -18,7 +18,7 @@ kafka:
       user: 'kafka'
       group: 'confluent'
       log_dir: '/var/log/kafka'
-    sim:
+    wood:
       user: 'kafka'
       group: 'confluent'
       log_dir: '/var/log/kafka'
@@ -44,7 +44,7 @@ kafka:
     test:
       User: 'kafka'
       Group: 'confluent'
-    dev:
+    wood:
       User: 'kafka'
       Group: 'confluent'
     prod:
@@ -92,12 +92,11 @@ kafka:
       zkserver1: '192.168.100.250'
       zkserver2: '192.168.100.252'
       zkserver3: '192.168.100.253'
-
-      #advertised_listeners_suffix: '.test.com:9092'
-    dev:
-      zkserver1: 'kafka1.dev.com'
-      zkserver2: 'kafka2.dev.com'
-      zkserver3: 'kafka3.dev.com'
+     #advertised_listeners_suffix: '.test.com:9092'
+    wood:
+      zkserver1: '192.168.100.101'
+      zkserver2: '192.168.100.102'
+      zkserver3: '192.168.100.103'
       #advertised_listeners_suffix: '.dev.com:9092'
     prod:
       zkserver1: 'kafka1.prod.com'
@@ -117,9 +116,9 @@ kafka:
       KAFKA_HEAP_OPTS: "-Xmx24000M -Xms24000M"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/server_log4j.properties"
       LOG_DIR: "/var/log/kafka"
-    dev:
+    wood:
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=true -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
-      KAFKA_HEAP_OPTS: "-Xmx2000M -Xms2000M"
+      KAFKA_HEAP_OPTS: "-Xmx24000M -Xms24000M"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/server_log4j.properties"
       LOG_DIR: "/var/log/kafka"
     prod:

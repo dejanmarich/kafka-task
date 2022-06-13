@@ -41,7 +41,7 @@ common:
       comment: 'Confluent group'
       shell: '/bin/bash'
       local_path: '/tmp'
-    dev:
+    wood:
       group: 'confluent'
       user: 'confluent'
       gid: '1159'
@@ -79,7 +79,7 @@ confluent:
   #ENV
   test:
     log_basepath: '/var/log'
-  dev:
+  wood:
     log_basepath: '/var/log'
   prod:
     log_basepath: '/var/log'

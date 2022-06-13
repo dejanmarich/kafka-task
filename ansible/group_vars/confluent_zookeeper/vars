@@ -27,10 +27,10 @@ zookeeper:
       log_dir: '/var/log/zookeeper'
       user: 'zookeeper'
       group: 'confluent'
-    dev:
-      server1: 'kafka1.dev.com'
-      server2: 'kafka2.dev.com'
-      server3: 'kafka3.dev.com'
+    wood:
+      server1: '192.168.100.101'
+      server2: '192.168.100.102'
+      server3: '192.168.100.103'
       log_dir: '/var/log/zookeeper'
       user: 'zookeeper'
       group: 'confluent'
@@ -59,7 +59,7 @@ zookeeper:
     test:
       User: 'zookeeper'
       Group: 'confluent'
-    dev:
+    wood:
       User: 'zookeeper'
       Group: 'confluent'
     prod:
@@ -76,8 +76,7 @@ zookeeper:
     test:
       KAFKA_GC_LOG_OPTS: "-Xloggc:/var/log/zookeeper/server-gc.log -verbose:gc"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
-      JMX_PORT: "9998"
-    sim:
+    wood:
       KAFKA_GC_LOG_OPTS: "-Xloggc:/var/log/zookeeper/server-gc.log -verbose:gc"
       KAFKA_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/confluent/zookeeper_log4j.properties"
     production:
